@@ -31,6 +31,7 @@ public class BusquedaFrame extends javax.swing.JFrame {
         this.tabla = tabla;
         this.accion = accion;
         btnBuscar.setActionCommand(accion);
+        btnBuscar.setText(accion);
     }
 
     /**
