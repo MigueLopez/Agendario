@@ -47,4 +47,50 @@ public class ConexionPostgreSQL {
         return false;
     }
     
+    public static ResultSet obtenerRegistro(String tabla, String condicion){
+        Connection con = ConexionPostgreSQL.getConexion();
+        ResultSet resultado = null;
+        String query;
+        
+        if(con != null){
+            try{
+                Statement st = con.createStatement();
+                query = "SELECT * FROM " + tabla + " WHERE " + condicion;
+                resultado = st.executeQuery(query);
+            }catch (SQLException e) {
+                JOptionPane.showMessageDialog(null,"Error: " + e.getMessage());
+            }
+        }
+        
+        return resultado;
+    }
+    
+    public static boolean borrarRegistro(String tabla, String condicion){
+        Connection con = ConexionPostgreSQL.getConexion();
+        String query;
+        
+        if(con != null){
+            try{
+                Statement st = con.createStatement();
+                
+                //Utilizamos el SELECT para validar la existencia del registro
+                query = "SELECT * FROM " + tabla + " WHERE " + condicion;
+                if(st.executeQuery(query).next()){
+                    //eliminamos el registro
+                    query = "DELETE FROM " + tabla + " WHERE " + condicion;
+                    st.execute(query);
+                    return true;
+                }
+                else{
+                    JOptionPane.showMessageDialog(null,"No se encontró el registro");
+                }
+                
+                
+            }catch (SQLException e) {
+                JOptionPane.showMessageDialog(null,"Error: " + e.getMessage());
+            }
+        }
+        return false;
+    }
+    
 }

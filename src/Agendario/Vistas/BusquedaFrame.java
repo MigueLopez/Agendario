@@ -20,16 +20,18 @@ public class BusquedaFrame extends javax.swing.JFrame {
     private String campo;
     private String tabla;
     private String accion; //Consultar,Editar,Borrar
+    private int idUsuario; //Id del usuario logeado al momento
 
     /**
      * Creates new form BusquedaFrame
      */
-    public BusquedaFrame(String label,String campo, String tabla, String accion) {
+    public BusquedaFrame(String label,String campo, String tabla, String accion, int idUsuario) {
         initComponents();
         lblCampo.setText(label);
         this.campo = campo;
         this.tabla = tabla;
         this.accion = accion;
+        this.idUsuario = idUsuario;
         btnBuscar.setActionCommand(accion);
         btnBuscar.setText(accion);
     }
@@ -69,7 +71,7 @@ public class BusquedaFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnBuscar))
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblCampo))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -90,9 +92,10 @@ public class BusquedaFrame extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         //Dependiendo la tabla se crea el Frame
+        ResultSet rs;
         switch(tabla.charAt(0)){
             case 'u' : //Usuario
-                ResultSet rs = obtenerRegistro();
+                rs = ConexionPostgreSQL.obtenerRegistro(tabla, campo + " = '" + txtBusca.getText() + "'");
                 switch(accion.charAt(0)){
                     case 'E': //Editar
                         try{
@@ -126,18 +129,59 @@ public class BusquedaFrame extends javax.swing.JFrame {
                         }  
                         break;
                     case 'B': //Borrar
-                        borrarRegistro();
+                        if(ConexionPostgreSQL.borrarRegistro(tabla,campo + " = '" + txtBusca.getText() + "'")){
+                            JOptionPane.showMessageDialog(null,"El registro se eliminó correctamente");
+                        }
                         this.dispose();
                         break;
                 }
                 break;
             case 'm' : //Materia
+                rs = ConexionPostgreSQL.obtenerRegistro(tabla, campo + " = '" + txtBusca.getText() + "' AND idUsuario = " + idUsuario);
                 switch(accion.charAt(0)){
                     case 'E': //Editar
+                        try{
+                            if(rs.next()){
+                                MateriasFrame mf = new MateriasFrame("Editar",idUsuario);
+                                mf.llenarCamposFrame(rs);
+                                mf.setVisible(true);
+                                this.dispose();
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null,"No se encontró el registro");
+                            }
+                        }catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null,"Error: " + e.getMessage());
+                        }        
                         break;
                     case 'C': //Consultar
+                        try{
+                            if(rs.next()){
+                                MateriasFrame mf = new MateriasFrame("Consultar",idUsuario);
+                                mf.llenarCamposFrame(rs);
+                                mf.inhabilitaCampos();
+                                mf.setVisible(true);
+                                this.dispose();
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null,"No se encontró el registro");
+                            }
+                        }catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null,"Error: " + e.getMessage());
+                        }  
                         break;
-                    case 'B': //Borrar
+                    case 'B': 
+                        try {
+                            //Borrar
+                            rs.next();
+                            ConexionPostgreSQL.borrarRegistro("clase","idmateria = " + String.valueOf(rs.getInt("idmateria")));
+                        } catch (SQLException ex) {
+                            System.out.println("Error al eliminar registros de clases: " + ex.getMessage());
+                        }
+                        if(ConexionPostgreSQL.borrarRegistro(tabla,campo + " = '" + txtBusca.getText() + "'")){
+                            JOptionPane.showMessageDialog(null,"El registro se eliminó correctamente");
+                        }
+                        this.dispose();
                         break;
                 }
                 break;
@@ -154,50 +198,6 @@ public class BusquedaFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private ResultSet obtenerRegistro(){
-        Connection con = ConexionPostgreSQL.getConexion();
-        ResultSet resultado = null;
-        String query;
-        
-        if(con != null){
-            try{
-                Statement st = con.createStatement();
-                query = "SELECT * FROM " + tabla + " WHERE " + campo + " = '" + txtBusca.getText() + "'";
-                resultado = st.executeQuery(query);
-            }catch (SQLException e) {
-                JOptionPane.showMessageDialog(null,"Error: " + e.getMessage());
-            }
-        }
-        
-        return resultado;
-    }
-    
-    private void borrarRegistro(){
-        Connection con = ConexionPostgreSQL.getConexion();
-        String query;
-        
-        if(con != null){
-            try{
-                Statement st = con.createStatement();
-                
-                //Utilizamos el SELECT para validar la existencia del registro
-                query = "SELECT * FROM " + tabla + " WHERE " + campo + " = '" + txtBusca.getText() + "'";
-                if(st.executeQuery(query).next()){
-                    //eliminamos el registro
-                    query = "DELETE FROM " + tabla + " WHERE " + campo + " = '" + txtBusca.getText() + "'";
-                    st.execute(query);
-                    JOptionPane.showMessageDialog(null,"El registro se eliminó correctamente");
-                }
-                else{
-                    JOptionPane.showMessageDialog(null,"No se encontró el registro");
-                }
-                
-                
-            }catch (SQLException e) {
-                JOptionPane.showMessageDialog(null,"Error: " + e.getMessage());
-            }
-        }
-    }
     
     /**
      * @param args the command line arguments
@@ -229,7 +229,7 @@ public class BusquedaFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BusquedaFrame("Login:","login","usuario","Borrar").setVisible(true);
+                new BusquedaFrame("Clave Materia:","clave","materia","Editar",2).setVisible(true);
             }
         });
     }

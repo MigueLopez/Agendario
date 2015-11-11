@@ -3,7 +3,13 @@
  */
 package Agendario.Vistas;
 
+import Agendario.Conexion.ConexionPostgreSQL;
 import Agendario.Datos.Materia;
+import Agendario.Datos.Clase;
+import javax.swing.*;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -12,12 +18,18 @@ import Agendario.Datos.Materia;
 public class MateriasFrame extends javax.swing.JFrame {
 
     private Materia materia;
+    private Clase[] clases;
+    private int idUsuario;
+    private String accion; //Agregar, Editar, Consultar
     
     /**
      * Creates new form MateriasFrame
      */
-    public MateriasFrame() {
+    public MateriasFrame(String accion, int idUsuario) {
         initComponents();
+        this.accion = accion;
+        this.idUsuario = idUsuario;  //Se guarda el idUsuario que este logeado al momento
+        clases = new Clase[5];
     }
 
     /**
@@ -68,33 +80,33 @@ public class MateriasFrame extends javax.swing.JFrame {
 
         chkLunes.setText("Lunes");
 
-        spnLunesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnLunesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 21, 1));
 
-        spnLunesFin.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnLunesFin.setModel(new javax.swing.SpinnerNumberModel(8, 8, 22, 1));
 
         chkMartes.setText("Martes");
 
-        spnMartesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnMartesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 21, 1));
 
-        spnMartesFin.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnMartesFin.setModel(new javax.swing.SpinnerNumberModel(8, 8, 22, 1));
 
-        spnMiercolesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnMiercolesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 21, 1));
 
-        spnMiercolesFin.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnMiercolesFin.setModel(new javax.swing.SpinnerNumberModel(8, 8, 22, 1));
 
         chkMiercoles.setText("Miércoles");
 
-        spnJuevesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnJuevesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 21, 1));
 
         chkJueves.setText("Jueves");
 
-        spnJuevesFin.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnJuevesFin.setModel(new javax.swing.SpinnerNumberModel(8, 8, 22, 1));
 
         chkViernes.setText("Viernes");
 
-        spnViernesFin.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnViernesFin.setModel(new javax.swing.SpinnerNumberModel(8, 8, 22, 1));
 
-        spnViernesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 22, 1));
+        spnViernesInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 21, 1));
 
         lblHoraInicio.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblHoraInicio.setText("Hora Inicio");
@@ -106,6 +118,11 @@ public class MateriasFrame extends javax.swing.JFrame {
         lblHorario.setText("Horario");
 
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -221,6 +238,208 @@ public class MateriasFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        //validar que las contraseñas coincidan
+        if(validaHoras()){
+            switch(accion.charAt(0)){
+                case 'A': //Agregar
+                    if(Materia.validaClave(txtClave.getText())){
+                        creaArregloClases();
+                        if(validaClases(-1)){ //-1 porque aun no hemos agregado la materia
+                            materia = new Materia(txtClave.getText(),txtNombre.getText(),idUsuario,clases);
+                            materia.inserta();
+                            dispose();    
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null,"El registro de materia crea conflictos de clase en su horario");
+                        }
+                    }
+                    break;
+
+                case 'E':
+                    actualizaMateria();
+                    if(validaClases(materia.getIdMateria())){
+                        materia.actualiza();
+                        dispose();    
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null,"El registro de materia crea conflictos de clase en su horario");
+                    }                    
+                    break;
+
+                case 'C':  //En la consulta simplemente se cierra la ventana
+                    dispose();
+                    break;
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"Hay incongruencia en las horas de clase ingresadas");
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void creaArregloClases(){
+        int cont;
+        
+        if(chkLunes.isSelected()){
+            clases[0] = new Clase("Lunes",(int)spnLunesInicio.getValue(),(int)spnLunesFin.getValue());            
+        }
+        if(chkMartes.isSelected()){
+            clases[1] = new Clase("Martes",(int)spnMartesInicio.getValue(),(int)spnMartesFin.getValue());            
+        }
+        if(chkMiercoles.isSelected()){
+            clases[2] = new Clase("Miercoles",(int)spnMiercolesInicio.getValue(),(int)spnMiercolesFin.getValue());            
+        }
+        if(chkJueves.isSelected()){
+            clases[3] = new Clase("Jueves",(int)spnJuevesInicio.getValue(),(int)spnJuevesFin.getValue());            
+        }
+        if(chkViernes.isSelected()){
+            clases[4] = new Clase("Viernes",(int)spnViernesInicio.getValue(),(int)spnViernesFin.getValue());            
+        }    
+    }
+    
+    public void llenarCamposFrame(ResultSet rs){
+        //Tomar los datos del ResultSet y ponerlos en el Frame y en usuario
+        materia = new Materia();
+        try {   
+            txtClave.setText(rs.getString("clave"));
+            txtNombre.setText(rs.getString("materia"));
+            llenarComponentesClases(rs.getInt("idmateria"));
+            
+            materia.setIdMateria(rs.getInt("idmateria"));
+            materia.setClave(rs.getString("clave"));
+            materia.setNombre(rs.getString("materia"));
+            materia.setIdUsuario(rs.getInt("idusuario"));      
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,"Error: " + ex.getMessage());
+        }
+    }
+    
+    private void actualizaMateria(){   
+        materia.setClave(txtClave.getText());     
+        materia.setNombre(txtNombre.getText());
+        materia.setIdUsuario(idUsuario);
+        creaArregloClases();
+        materia.setClases(clases);
+    }
+    
+    private void llenarComponentesClases(int idMateria){
+        ResultSet rs;
+        
+        //traer los registros de clases de la materia
+        rs = ConexionPostgreSQL.obtenerRegistro("clase", "idmateria = " + idMateria);
+        
+        try {
+            //Recorrer registro y llenar campos materia
+            while(rs.next()){
+                if(rs.getString("dia").equalsIgnoreCase("Lunes")){
+                    chkLunes.setSelected(true);
+                    spnLunesInicio.setValue(rs.getInt("horainicio"));
+                    spnLunesFin.setValue(rs.getInt("horafin"));
+                }
+                else if(rs.getString("dia").equalsIgnoreCase("Martes")){
+                    chkMartes.setSelected(true);
+                    spnMartesInicio.setValue(rs.getInt("horainicio"));
+                    spnMartesFin.setValue(rs.getInt("horafin"));
+                }
+                else if(rs.getString("dia").equalsIgnoreCase("Miercoles")){
+                    chkMiercoles.setSelected(true);
+                    spnMiercolesInicio.setValue(rs.getInt("horainicio"));
+                    spnMiercolesFin.setValue(rs.getInt("horafin"));
+                }
+                else if(rs.getString("dia").equalsIgnoreCase("Jueves")){
+                    chkJueves.setSelected(true);
+                    spnJuevesInicio.setValue(rs.getInt("horainicio"));
+                    spnJuevesFin.setValue(rs.getInt("horafin"));
+                }
+                else if(rs.getString("dia").equalsIgnoreCase("Viernes")){
+                    chkViernes.setSelected(true);
+                    spnViernesInicio.setValue(rs.getInt("horainicio"));
+                    spnViernesFin.setValue(rs.getInt("horafin"));
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,"Error: " + ex.getMessage());
+        }
+        
+    }
+    
+    public void inhabilitaCampos(){
+        txtClave.setEditable(false);
+        txtNombre.setEditable(false);
+        chkLunes.setEnabled(false);
+        chkMartes.setEnabled(false);
+        chkMiercoles.setEnabled(false);
+        chkJueves.setEnabled(false);
+        chkViernes.setEnabled(false);
+        spnLunesInicio.setEnabled(false);
+        spnLunesFin.setEnabled(false);
+        spnMartesInicio.setEnabled(false);
+        spnMartesFin.setEnabled(false);
+        spnMiercolesInicio.setEnabled(false);
+        spnMiercolesFin.setEnabled(false);
+        spnJuevesInicio.setEnabled(false);
+        spnJuevesFin.setEnabled(false);
+        spnViernesInicio.setEnabled(false);
+        spnViernesFin.setEnabled(false);
+    }
+    
+    private boolean validaClases(int idMateria){
+        for(int i=0 ; i<5 ; i++){
+            if(clases[i] != null){
+                if(!validaClase(clases[i].getDia(),clases[i].getHoraInicio(),idMateria)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private boolean validaClase(String dia, int horaInicio, int idMateria){
+        ResultSet rs;
+        rs = ConexionPostgreSQL.obtenerRegistro("vclases", "dia = '" + dia + "' AND horainicio <= " + horaInicio + " AND horafin > " + horaInicio + " AND idMateria <> " + idMateria + " AND idUsuario = " + idUsuario);
+        try {
+            if(rs.next()){
+                return false;
+            }
+            else{
+                return true;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al validar clases: " + ex.getMessage());
+        }
+        return false;
+    }
+    
+    private boolean validaHoras(){
+        if(chkLunes.isSelected()){
+            if((int)spnLunesInicio.getValue() >= (int)spnLunesFin.getValue()){
+                return false;
+            }
+        }
+        if(chkMartes.isSelected()){
+            if((int)spnMartesInicio.getValue() >= (int)spnMartesFin.getValue()){
+                return false;
+            }
+        }
+        if(chkMiercoles.isSelected()){
+            if((int)spnMiercolesInicio.getValue() >= (int)spnMiercolesFin.getValue()){
+                return false;
+            }
+        }
+        if(chkJueves.isSelected()){
+            if((int)spnJuevesInicio.getValue() >= (int)spnJuevesFin.getValue()){
+                return false;
+            }
+        }
+        if(chkViernes.isSelected()){
+            if((int)spnViernesInicio.getValue() >= (int)spnViernesFin.getValue()){
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -251,11 +470,11 @@ public class MateriasFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MateriasFrame().setVisible(true);
+                new MateriasFrame("Agregar",2).setVisible(true);
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JCheckBox chkJueves;

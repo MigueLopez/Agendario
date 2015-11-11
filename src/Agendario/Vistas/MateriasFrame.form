@@ -194,14 +194,14 @@
     <Component class="javax.swing.JSpinner" name="spnLunesInicio">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="7" maximum="21" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="spnLunesFin">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="8" maximum="22" minimum="8" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
@@ -213,28 +213,28 @@
     <Component class="javax.swing.JSpinner" name="spnMartesInicio">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="7" maximum="21" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="spnMartesFin">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="8" maximum="22" minimum="8" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="spnMiercolesInicio">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="7" maximum="21" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="spnMiercolesFin">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="8" maximum="22" minimum="8" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
@@ -246,7 +246,7 @@
     <Component class="javax.swing.JSpinner" name="spnJuevesInicio">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="7" maximum="21" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
@@ -258,7 +258,7 @@
     <Component class="javax.swing.JSpinner" name="spnJuevesFin">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="8" maximum="22" minimum="8" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
@@ -270,14 +270,14 @@
     <Component class="javax.swing.JSpinner" name="spnViernesFin">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="8" maximum="22" minimum="8" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="spnViernesInicio">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="7" maximum="22" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="7" maximum="21" minimum="7" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
     </Component>
@@ -311,6 +311,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Guardar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGuardarActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

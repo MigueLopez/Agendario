@@ -3,6 +3,10 @@
  */
 package Agendario.Datos;
 
+import javax.swing.*;
+import java.sql.*;
+import Agendario.Conexion.*;
+
 /**
  *
  * @author Miguel Ángel López Cervantes
@@ -66,6 +70,27 @@ public class Clase {
     
     public int getHoraFin(){
         return this.horaFin;
+    }
+    
+    public void inserta(int idMateria){
+        Connection con;
+        String qry;
+        
+        con = ConexionPostgreSQL.getConexion();
+        
+        if(con != null){
+            try{
+                idClase = GeneradorPK.dameSiguientePK("idclase", "clase");
+                Statement st = con.createStatement();
+                qry = "INSERT INTO clase VALUES("+String.valueOf(idClase)+"," + String.valueOf(idMateria) + ",'"+dia+"',"+horaInicio+","+horaFin+")";
+                st.execute(qry);
+                //System.out.println("La clase se agrego correctamente");
+            }
+            catch(Exception e){
+                JOptionPane.showMessageDialog(null,"Error al insertar clase: " + e.getMessage());
+            }
+        }
+        
     }
     
 }

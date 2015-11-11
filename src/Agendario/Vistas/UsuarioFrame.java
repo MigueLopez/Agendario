@@ -156,7 +156,7 @@ public class UsuarioFrame extends javax.swing.JFrame {
             txtPassword.setText(usuario.getPassword());
             txtPassword2.setText(usuario.getPassword());            
         } catch (SQLException ex) {
-            Logger.getLogger(UsuarioFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,"Error: " + ex.getMessage());
         }
     }
     
