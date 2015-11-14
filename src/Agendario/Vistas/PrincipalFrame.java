@@ -5,17 +5,26 @@
  */
 package Agendario.Vistas;
 
+import Agendario.Conexion.*;
+import java.sql.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
- * @author migue_000
+ * @author Miguel Ángel López Cervantes
  */
 public class PrincipalFrame extends javax.swing.JFrame {
+    
+    private int idUsuario;
 
     /**
      * Creates new form PrincipalFrame
      */
     public PrincipalFrame() {
         initComponents();
+        idUsuario = 2;
+        actualizaTablaHorario();
     }
 
     /**
@@ -46,15 +55,20 @@ public class PrincipalFrame extends javax.swing.JFrame {
 
         tablaHorario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(tablaHorario);
 
         jMenu1.setText("File");
@@ -122,6 +136,42 @@ public class PrincipalFrame extends javax.swing.JFrame {
                 new PrincipalFrame().setVisible(true);
             }
         });
+    }
+    
+    private void actualizaTablaHorario(){
+        Connection con;
+        ResultSet rs;
+        DefaultTableModel model = (DefaultTableModel) tablaHorario.getModel();
+        String qry = "SELECT h.hora," +
+                     "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Lunes'     AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS lunes," +
+                     "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Martes'    AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS martes," +
+                     "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Miercoles' AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS miercoles," +
+	             "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Jueves'    AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS jueves," +
+	             "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Viernes'   AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS viernes" +
+                     " FROM horas h";
+        
+        con = ConexionPostgreSQL.getConexion();
+        
+        //Limpiar el horario para actualizarlo
+        if (model.getRowCount() > 0) {
+            for (int i = model.getRowCount() - 1; i > -1; i--) {
+                model.removeRow(i);
+            }
+        }
+        
+        if(con != null){
+            try{
+                Statement st = con.createStatement();
+                rs = st.executeQuery(qry);
+                
+                while(rs.next()){
+                    model.addRow(new Object[]{rs.getString("hora"),rs.getString("lunes"),rs.getString("martes"),rs.getString("miercoles"),rs.getString("jueves"),rs.getString("viernes")});
+                }
+            }
+            catch(Exception e){
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
