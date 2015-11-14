@@ -11,6 +11,57 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+//Regex
+//[a-zA-Z0-9]{5,15} Login - Letras sin acentos y numeros, minimo 5 y maximo 15 caracteres
+//[a-zA-ZÁáÉéÍíÓóÚú ]{1,30} Nombre - cualquier letra con acetos y espacios en blanco , mínimo 1 máximo 30
+//[^\s]{5,15}  -Cualquier caracter excepto espacios en blanco (5 a 15 cracteres)
+
+class VerifierNombre extends InputVerifier {
+    public boolean verify(JComponent input) {
+        String text = ((JTextField) input).getText();
+        String regex = "[a-zA-ZÁáÉéÍíÓóÚú ]{1,30}";
+        
+        if(text.matches(regex)){
+            return true;
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"Debe capturar un NOMBRE válido");
+        }
+        return false;
+    }
+}
+
+class VerifierLogin extends InputVerifier {
+    public boolean verify(JComponent input) {
+        String text = ((JTextField) input).getText();
+        String regex = "[a-zA-Z0-9]{5,15}";
+        
+        if(text.matches(regex)){
+            return true;
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"Debe capturar un LOGIN válido");
+        }
+        return false;
+    }
+}
+
+class VerifierPassword extends InputVerifier {
+    public boolean verify(JComponent input) {
+        String text = new String(((JPasswordField)input).getPassword());
+        String regex = "[^\\s]{5,15}";
+        
+        if(text.matches(regex)){
+            return true;
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"Debe capturar una CONTRASEÑA válida");
+        }
+        return false;
+    }
+}
+
 /**
  *
  * @author Miguel Ángel López Cervantes
@@ -27,6 +78,8 @@ public class UsuarioFrame extends javax.swing.JFrame {
         initComponents();
         this.accion = accion;
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,13 +99,21 @@ public class UsuarioFrame extends javax.swing.JFrame {
         btnGuardar = new javax.swing.JButton();
         txtPassword = new javax.swing.JPasswordField();
         txtPassword2 = new javax.swing.JPasswordField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Usuarios");
 
         lblNombre.setText("Nombre:");
 
+        txtNombre.setInputVerifier(new VerifierNombre());
+
         lblLogin.setText("Login:");
+
+        txtLogin.setInputVerifier(new VerifierLogin());
 
         lblPassword.setText("Contraseña:");
 
@@ -64,6 +125,18 @@ public class UsuarioFrame extends javax.swing.JFrame {
                 btnGuardarActionPerformed(evt);
             }
         });
+
+        txtPassword.setInputVerifier(new VerifierPassword());
+
+        txtPassword2.setInputVerifier(new VerifierPassword());
+
+        jLabel1.setText("De 5 a 15 caracteres");
+
+        jLabel2.setText("Letras y numeros (de 5 a 15 caracteres)");
+
+        jLabel3.setText("De 5 a 15 caracteres");
+
+        jLabel4.setText("Máximo 30 caracteres");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,15 +151,24 @@ public class UsuarioFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNombre)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblLogin)
                             .addComponent(lblPassword)
                             .addComponent(lblPassword2)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtPassword2, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)))
-                        .addGap(0, 14, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtPassword2, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel3)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel4)))
+                        .addGap(0, 34, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -95,19 +177,27 @@ public class UsuarioFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblNombre)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblPassword2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(btnGuardar)
                 .addContainerGap())
@@ -210,6 +300,10 @@ public class UsuarioFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel lblLogin;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPassword;
