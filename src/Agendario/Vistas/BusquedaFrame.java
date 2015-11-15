@@ -50,6 +50,7 @@ public class BusquedaFrame extends javax.swing.JFrame {
         btnBuscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         lblCampo.setText("Clave:");
 

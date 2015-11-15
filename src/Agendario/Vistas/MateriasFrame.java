@@ -70,6 +70,7 @@ public class MateriasFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Materias");
+        setResizable(false);
 
         lblClave.setText("Clave:");
 
@@ -279,6 +280,7 @@ public class MateriasFrame extends javax.swing.JFrame {
 
     private void creaArregloClases(){
         int cont;
+        clases = new Clase[5];
         
         if(chkLunes.isSelected()){
             clases[0] = new Clase("Lunes",(int)spnLunesInicio.getValue(),(int)spnLunesFin.getValue());            
@@ -386,7 +388,7 @@ public class MateriasFrame extends javax.swing.JFrame {
     private boolean validaClases(int idMateria){
         for(int i=0 ; i<5 ; i++){
             if(clases[i] != null){
-                if(!validaClase(clases[i].getDia(),clases[i].getHoraInicio(),idMateria)){
+                if(!validaClase(clases[i].getDia(),clases[i].getHoraInicio(),clases[i].getHoraFin(),idMateria)){
                     return false;
                 }
             }
@@ -394,9 +396,9 @@ public class MateriasFrame extends javax.swing.JFrame {
         return true;
     }
     
-    private boolean validaClase(String dia, int horaInicio, int idMateria){
+    private boolean validaClase(String dia, int horaInicio, int horaFin,int idMateria){
         ResultSet rs;
-        rs = ConexionPostgreSQL.obtenerRegistro("vclases", "dia = '" + dia + "' AND horainicio <= " + horaInicio + " AND horafin > " + horaInicio + " AND idMateria <> " + idMateria + " AND idUsuario = " + idUsuario);
+        rs = ConexionPostgreSQL.obtenerRegistro("vclases", "dia = '" + dia + "' AND ((horainicio <= " + horaInicio + " AND horafin > " + horaInicio + ") OR (horainicio <= " + horaFin + " AND horafin > " + horaFin + ")) AND idMateria <> " + idMateria + " AND idUsuario = " + idUsuario);
         try {
             if(rs.next()){
                 return false;

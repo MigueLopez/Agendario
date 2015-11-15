@@ -45,6 +45,7 @@ public class EventoFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Eventos");
+        setResizable(false);
 
         lblTitulo.setText("Título:");
 

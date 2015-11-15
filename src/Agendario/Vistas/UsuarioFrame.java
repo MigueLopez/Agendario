@@ -106,6 +106,7 @@ public class UsuarioFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Usuarios");
+        setResizable(false);
 
         lblNombre.setText("Nombre:");
 
