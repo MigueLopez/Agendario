@@ -7,6 +7,7 @@ package Agendario.Vistas;
 
 import Agendario.Conexion.*;
 import java.sql.*;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -285,6 +286,7 @@ public class PrincipalFrame extends javax.swing.JFrame {
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         actualizaTablaHorario();
+        actualizaListaEventos();
     }//GEN-LAST:event_formWindowGainedFocus
 
     public int getIdUsuario(){
@@ -359,6 +361,35 @@ public class PrincipalFrame extends javax.swing.JFrame {
                 while(rs.next()){
                     model.addRow(new Object[]{rs.getString("hora"),rs.getString("lunes"),rs.getString("martes"),rs.getString("miercoles"),rs.getString("jueves"),rs.getString("viernes")});
                 }
+            }
+            catch(Exception e){
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+    }
+    
+    private void actualizaListaEventos(){
+        Connection con;
+        ResultSet rs;
+        DefaultListModel lm = new DefaultListModel();
+        
+        String qry = "SELECT * FROM evento ORDER BY fecha, hora";
+        
+        con = ConexionPostgreSQL.getConexion();
+        
+        //Limpiar la lista para actualizarla
+        listaEventos.removeAll();        
+        
+        if(con != null){
+            try{
+                Statement st = con.createStatement();
+                rs = st.executeQuery(qry);
+                
+                while(rs.next()){
+                    lm.addElement(rs.getString("titulo") + " - " + rs.getString("fecha") + " " + rs.getString("hora") + ":00");
+                }
+                
+                listaEventos.setModel(lm);
             }
             catch(Exception e){
                 System.out.println("Error: " + e.getMessage());
