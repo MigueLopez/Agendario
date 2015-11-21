@@ -172,14 +172,19 @@ public class Evento {
     public void inserta(){
         Connection con;
         String qry;
+        String materia;
         
         con = ConexionPostgreSQL.getConexion();
         
         if(con != null){
             try{
                 idEvento = GeneradorPK.dameSiguientePK("idevento", "evento");
+                materia = String.valueOf(idMateria);
+                if(idMateria==0){  //ID = 0 significa que no esta ligado a ninguna materia
+                    materia = "NULL";
+                }
                 Statement st = con.createStatement();
-                qry = "INSERT INTO evento VALUES("+String.valueOf(idEvento)+",'"+titulo+"','"+notas+"','"+fecha+"',"+hora+","+idUsuario+","+idMateria+","+idTipoEvento+")";
+                qry = "INSERT INTO evento VALUES("+String.valueOf(idEvento)+",'"+titulo+"','"+notas+"','"+fecha+"',"+hora+","+idUsuario+","+materia+","+idTipoEvento+")";
                 st.execute(qry);
                 JOptionPane.showMessageDialog(null,"El evento se agrego correctamente");
             }
@@ -193,13 +198,19 @@ public class Evento {
     public void actualiza(){
         Connection con;
         String qry;
+        String materia;
         
         con = ConexionPostgreSQL.getConexion();
+                
+        materia = String.valueOf(idMateria);
+        if(idMateria==0){  //ID = 0 significa que no esta ligado a ninguna materia
+            materia = "NULL";
+        }
         
         if(con != null){
             try{
                 Statement st = con.createStatement();
-                qry = "UPDATE evento SET titulo = '" + titulo + "', notas = '" + notas + "', fecha = '" + fecha + "', hora = " + hora + ", idmateria = " + idMateria + ", idtipoevento = " + idTipoEvento + " WHERE idEvento = " + String.valueOf(idEvento); ;
+                qry = "UPDATE evento SET titulo = '" + titulo + "', notas = '" + notas + "', fecha = '" + fecha + "', hora = " + hora + ", idmateria = " + materia + ", idtipoevento = " + idTipoEvento + " WHERE idEvento = " + String.valueOf(idEvento); ;
                 st.execute(qry);
                 JOptionPane.showMessageDialog(null,"El evento se actualizó correctamente");
             }

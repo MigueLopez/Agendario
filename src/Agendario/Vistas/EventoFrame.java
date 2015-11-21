@@ -90,6 +90,7 @@ public class EventoFrame extends javax.swing.JFrame {
         rs = ConexionPostgreSQL.obtenerRegistro("materia", "idusuario = " + idUsuario);  //Traer todo las materias del usuario actual
         cmbMateria.removeAllItems();
         try {
+            cbm.addElement("- Ninguna -");
             while(rs.next()){
                 cbm.addElement(rs.getString("materia"));
             }

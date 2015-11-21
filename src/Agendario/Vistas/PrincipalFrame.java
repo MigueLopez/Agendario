@@ -7,6 +7,8 @@ package Agendario.Vistas;
 
 import Agendario.Conexion.*;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -373,6 +375,7 @@ public class PrincipalFrame extends javax.swing.JFrame {
         Connection con;
         ResultSet rs;
         DefaultListModel lm = new DefaultListModel();
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         
         String qry = "SELECT * FROM evento ORDER BY fecha, hora";
         
@@ -387,7 +390,7 @@ public class PrincipalFrame extends javax.swing.JFrame {
                 rs = st.executeQuery(qry);
                 
                 while(rs.next()){
-                    lm.addElement(rs.getString("titulo") + " - " + rs.getString("fecha") + " " + rs.getString("hora") + ":00");
+                    lm.addElement(rs.getString("titulo") + " - " + df.format(rs.getDate("fecha")) + " " + rs.getString("hora") + ":00");
                 }
                 
                 listaEventos.setModel(lm);
