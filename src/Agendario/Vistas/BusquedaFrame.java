@@ -187,12 +187,44 @@ public class BusquedaFrame extends javax.swing.JFrame {
                 }
                 break;
             case 'e' : //Evento
+                rs = ConexionPostgreSQL.obtenerRegistro(tabla, campo + " = '" + txtBusca.getText() + "' AND idUsuario = " + idUsuario);
                 switch(accion.charAt(0)){
-                    case 'E': //Editar
+                     case 'E': //Editar
+                        try{
+                            if(rs.next()){
+                                EventoFrame mf = new EventoFrame("Editar",idUsuario);
+                                mf.llenarCamposFrame(rs);
+                                mf.setVisible(true);
+                                this.dispose();
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null,"No se encontró el registro");
+                            }
+                        }catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null,"Error: " + e.getMessage());
+                        }        
                         break;
                     case 'C': //Consultar
+                        try{
+                            if(rs.next()){
+                                EventoFrame ef = new EventoFrame("Consultar",idUsuario);
+                                ef.llenarCamposFrame(rs);
+                                ef.inhabilitaCampos();
+                                ef.setVisible(true);
+                                this.dispose();
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null,"No se encontró el registro");
+                            }
+                        }catch (SQLException e) {
+                            JOptionPane.showMessageDialog(null,"Error: " + e.getMessage());
+                        }  
                         break;
-                    case 'B': //Borrar
+                    case 'B': 
+                        if(ConexionPostgreSQL.borrarRegistro(tabla,campo + " = '" + txtBusca.getText() + "'")){
+                            JOptionPane.showMessageDialog(null,"El registro se eliminó correctamente");
+                        }
+                        this.dispose();
                         break;
                 }
                 break;

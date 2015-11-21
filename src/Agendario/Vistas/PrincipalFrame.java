@@ -77,11 +77,11 @@ public class PrincipalFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes"
+                "Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -211,7 +211,7 @@ public class PrincipalFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblHorario)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -269,7 +269,7 @@ public class PrincipalFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_menuEliminarMateriaActionPerformed
 
     private void menuAgregarEventoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAgregarEventoActionPerformed
-        //new EventoFrame("Agregar",idUsuario).setVisible(true);
+        new EventoFrame("Agregar",idUsuario).setVisible(true);
     }//GEN-LAST:event_menuAgregarEventoActionPerformed
 
     private void menuEditarEventoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarEventoActionPerformed
@@ -281,7 +281,7 @@ public class PrincipalFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_menuConsultarEventoActionPerformed
 
     private void menuEliminarEventoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEliminarEventoActionPerformed
-        new BusquedaFrame("Título:","titulo","evento","Eliminar",idUsuario).setVisible(true);
+        new BusquedaFrame("Título:","titulo","evento","Borrar",idUsuario).setVisible(true);
     }//GEN-LAST:event_menuEliminarEventoActionPerformed
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
@@ -337,11 +337,12 @@ public class PrincipalFrame extends javax.swing.JFrame {
         ResultSet rs;
         DefaultTableModel model = (DefaultTableModel) tablaHorario.getModel();
         String qry = "SELECT h.hora," +
-                     "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Lunes'     AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS lunes," +
-                     "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Martes'    AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS martes," +
-                     "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Miercoles' AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS miercoles," +
-	             "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Jueves'    AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS jueves," +
-	             "(SELECT materia FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Viernes'   AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS viernes" +
+                     "(SELECT clave FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Lunes'     AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS lunes," +
+                     "(SELECT clave FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Martes'    AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS martes," +
+                     "(SELECT clave FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Miercoles' AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS miercoles," +
+	             "(SELECT clave FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Jueves'    AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS jueves," +
+	             "(SELECT clave FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Viernes'   AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS viernes," +
+                     "(SELECT clave FROM materia m JOIN clase c ON m.idmateria=c.idmateria WHERE dia = 'Sabado'    AND horainicio <= h.hora AND horafin > hora AND idusuario = "+idUsuario+") AS sabado" +
                      " FROM horas h";
         
         con = ConexionPostgreSQL.getConexion();
@@ -359,7 +360,7 @@ public class PrincipalFrame extends javax.swing.JFrame {
                 rs = st.executeQuery(qry);
                 
                 while(rs.next()){
-                    model.addRow(new Object[]{rs.getString("hora"),rs.getString("lunes"),rs.getString("martes"),rs.getString("miercoles"),rs.getString("jueves"),rs.getString("viernes")});
+                    model.addRow(new Object[]{rs.getString("hora"),rs.getString("lunes"),rs.getString("martes"),rs.getString("miercoles"),rs.getString("jueves"),rs.getString("viernes"),rs.getString("sabado")});
                 }
             }
             catch(Exception e){

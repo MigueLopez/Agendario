@@ -89,7 +89,7 @@ public class Materia {
     public static boolean validaClave(String clave){
         ResultSet rs;
         
-        rs = ConexionPostgreSQL.obtenerRegistro("Materia", "clave = '" + clave + "'");
+        rs = ConexionPostgreSQL.obtenerRegistro("materia", "clave = '" + clave + "'");
         
         try {
             if(rs.next()){  //Si encuentra algun registro la clave ya esta repetida
@@ -166,7 +166,7 @@ public class Materia {
     }
     
     private void insertarClases(){
-        for(int i=0 ; i<5 ; i++){
+        for(int i=0 ; i<6 ; i++){
             if(clases[i] != null){
                 clases[i].inserta(idMateria);
             }

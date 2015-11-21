@@ -15,6 +15,22 @@ import java.util.logging.Logger;
  *
  * @author Miguel Ángel López Cervantes
  */
+
+class VerifierClave extends InputVerifier {
+    public boolean verify(JComponent input) {
+        String text = ((JTextField) input).getText();
+        String regex = "[a-zA-Z]{2}[0-9]{3}"; //Claves de matera con 2 letras y tres numeros
+        
+        if(text.matches(regex)){
+            return true;
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"Debe capturar una clave válida (2 Letras y 3 números)");
+        }
+        return false;
+    }
+}
+
 public class MateriasFrame extends javax.swing.JFrame {
 
     private Materia materia;
@@ -29,7 +45,7 @@ public class MateriasFrame extends javax.swing.JFrame {
         initComponents();
         this.accion = accion;
         this.idUsuario = idUsuario;  //Se guarda el idUsuario que este logeado al momento
-        clases = new Clase[5];
+        clases = new Clase[6];
     }
 
     /**
@@ -42,6 +58,9 @@ public class MateriasFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jProgressBar1 = new javax.swing.JProgressBar();
+        chkViernes1 = new javax.swing.JCheckBox();
+        spnViernesInicio1 = new javax.swing.JSpinner();
+        spnViernesFin1 = new javax.swing.JSpinner();
         lblClave = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
@@ -67,6 +86,18 @@ public class MateriasFrame extends javax.swing.JFrame {
         lblHorario = new javax.swing.JLabel();
         txtClave = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
+        chkSabado = new javax.swing.JCheckBox();
+        spnSabadoInicio = new javax.swing.JSpinner();
+        spnSabadoFin = new javax.swing.JSpinner();
+        lblDia2 = new javax.swing.JLabel();
+        lblHoraInicio2 = new javax.swing.JLabel();
+        lblHoraFin2 = new javax.swing.JLabel();
+
+        chkViernes1.setText("Viernes");
+
+        spnViernesInicio1.setModel(new javax.swing.SpinnerNumberModel(7, 7, 21, 1));
+
+        spnViernesFin1.setModel(new javax.swing.SpinnerNumberModel(8, 8, 22, 1));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Materias");
@@ -118,12 +149,29 @@ public class MateriasFrame extends javax.swing.JFrame {
         lblHorario.setFont(new java.awt.Font("Verdana", 1, 11)); // NOI18N
         lblHorario.setText("Horario");
 
+        txtClave.setInputVerifier(new VerifierClave());
+
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarActionPerformed(evt);
             }
         });
+
+        chkSabado.setText("Sábado");
+
+        spnSabadoInicio.setModel(new javax.swing.SpinnerNumberModel(7, 7, 21, 1));
+
+        spnSabadoFin.setModel(new javax.swing.SpinnerNumberModel(8, 8, 22, 1));
+
+        lblDia2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblDia2.setText("Día");
+
+        lblHoraInicio2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblHoraInicio2.setText("Hora Inicio");
+
+        lblHoraFin2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblHoraFin2.setText("Hora Fin");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,6 +180,14 @@ public class MateriasFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 26, Short.MAX_VALUE)
+                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -140,45 +196,64 @@ public class MateriasFrame extends javax.swing.JFrame {
                                 .addComponent(lblNombre))
                             .addComponent(lblHorario)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addComponent(lblDia))
-                                    .addComponent(chkMiercoles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(chkMartes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(chkLunes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(chkJueves, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(chkViernes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addComponent(lblHoraInicio)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addGap(10, 10, 10)
+                                                .addComponent(lblDia))
+                                            .addComponent(chkLunes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(2, 2, 2)
+                                                .addComponent(lblHoraInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(spnLunesInicio)))
                                         .addGap(18, 18, 18)
-                                        .addComponent(lblHoraFin))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblHoraFin)
+                                            .addComponent(spnLunesFin, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(spnViernesInicio, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                                            .addComponent(spnJuevesInicio, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(spnMiercolesInicio, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(spnMartesInicio, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(spnLunesInicio, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(chkMiercoles)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(spnMiercolesInicio))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(chkMartes, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(spnMartesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(spnLunesFin, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                                            .addComponent(spnMartesFin)
-                                            .addComponent(spnMiercolesFin)
-                                            .addComponent(spnJuevesFin)
-                                            .addComponent(spnViernesFin))))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jSeparator1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(spnMartesFin, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                                            .addComponent(spnMiercolesFin))))
+                                .addGap(48, 48, 48)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(11, 11, 11)
+                                        .addComponent(lblDia2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblHoraInicio2))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(chkJueves, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spnJuevesInicio, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(chkSabado, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spnSabadoInicio))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(chkViernes, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spnViernesInicio)))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(spnViernesFin, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spnJuevesFin, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spnSabadoFin, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblHoraFin2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -197,40 +272,45 @@ public class MateriasFrame extends javax.swing.JFrame {
                 .addGap(9, 9, 9)
                 .addComponent(lblHorario)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDia)
-                    .addComponent(lblHoraInicio)
-                    .addComponent(lblHoraFin))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblDia)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(chkLunes)
-                            .addComponent(spnLunesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(spnLunesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnLunesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(chkMartes)
-                            .addComponent(spnMartesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(spnLunesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnMartesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnMartesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkViernes)
+                            .addComponent(spnViernesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnViernesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(spnMartesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chkMiercoles)
-                    .addComponent(spnMiercolesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spnMiercolesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chkJueves)
-                    .addComponent(spnJuevesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spnJuevesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chkViernes)
-                    .addComponent(spnViernesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spnViernesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(chkMiercoles)
+                            .addComponent(spnMiercolesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnMiercolesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkSabado)
+                            .addComponent(spnSabadoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnSabadoFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblHoraFin)
+                        .addComponent(lblHoraInicio))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblDia2)
+                            .addComponent(lblHoraInicio2)
+                            .addComponent(lblHoraFin2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(chkJueves)
+                            .addComponent(spnJuevesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnJuevesFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(59, 59, 59)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(btnGuardar)
                 .addContainerGap())
         );
@@ -273,14 +353,11 @@ public class MateriasFrame extends javax.swing.JFrame {
                     break;
             }
         }
-        else{
-            JOptionPane.showMessageDialog(null,"Hay incongruencia en las horas de clase ingresadas");
-        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void creaArregloClases(){
         int cont;
-        clases = new Clase[5];
+        clases = new Clase[6];
         
         if(chkLunes.isSelected()){
             clases[0] = new Clase("Lunes",(int)spnLunesInicio.getValue(),(int)spnLunesFin.getValue());            
@@ -296,7 +373,10 @@ public class MateriasFrame extends javax.swing.JFrame {
         }
         if(chkViernes.isSelected()){
             clases[4] = new Clase("Viernes",(int)spnViernesInicio.getValue(),(int)spnViernesFin.getValue());            
-        }    
+        }   
+        if(chkSabado.isSelected()){
+            clases[5] = new Clase("Sabado",(int)spnSabadoInicio.getValue(),(int)spnSabadoFin.getValue());            
+        }  
     }
     
     public void llenarCamposFrame(ResultSet rs){
@@ -357,6 +437,11 @@ public class MateriasFrame extends javax.swing.JFrame {
                     chkViernes.setSelected(true);
                     spnViernesInicio.setValue(rs.getInt("horainicio"));
                     spnViernesFin.setValue(rs.getInt("horafin"));
+                }                
+                else if(rs.getString("dia").equalsIgnoreCase("Sabado")){
+                    chkSabado.setSelected(true);
+                    spnSabadoInicio.setValue(rs.getInt("horainicio"));
+                    spnSabadoFin.setValue(rs.getInt("horafin"));
                 }
             }
         } catch (SQLException ex) {
@@ -373,6 +458,7 @@ public class MateriasFrame extends javax.swing.JFrame {
         chkMiercoles.setEnabled(false);
         chkJueves.setEnabled(false);
         chkViernes.setEnabled(false);
+        chkSabado.setEnabled(false);
         spnLunesInicio.setEnabled(false);
         spnLunesFin.setEnabled(false);
         spnMartesInicio.setEnabled(false);
@@ -383,10 +469,12 @@ public class MateriasFrame extends javax.swing.JFrame {
         spnJuevesFin.setEnabled(false);
         spnViernesInicio.setEnabled(false);
         spnViernesFin.setEnabled(false);
+        spnSabadoInicio.setEnabled(false);
+        spnSabadoFin.setEnabled(false);
     }
     
     private boolean validaClases(int idMateria){
-        for(int i=0 ; i<5 ; i++){
+        for(int i=0 ; i<6 ; i++){
             if(clases[i] != null){
                 if(!validaClase(clases[i].getDia(),clases[i].getHoraInicio(),clases[i].getHoraFin(),idMateria)){
                     return false;
@@ -398,7 +486,7 @@ public class MateriasFrame extends javax.swing.JFrame {
     
     private boolean validaClase(String dia, int horaInicio, int horaFin,int idMateria){
         ResultSet rs;
-        rs = ConexionPostgreSQL.obtenerRegistro("vclases", "dia = '" + dia + "' AND ((horainicio <= " + horaInicio + " AND horafin > " + horaInicio + ") OR (horainicio <= " + horaFin + " AND horafin > " + horaFin + ")) AND idMateria <> " + idMateria + " AND idUsuario = " + idUsuario);
+        rs = ConexionPostgreSQL.obtenerRegistro("vclases", "dia = '" + dia + "' AND ((horainicio <= " + horaInicio + " AND horafin > " + horaInicio + ") OR (horainicio < " + horaFin + " AND horafin > " + horaFin + ")) AND idMateria <> " + idMateria + " AND idUsuario = " + idUsuario);
         try {
             if(rs.next()){
                 return false;
@@ -415,26 +503,37 @@ public class MateriasFrame extends javax.swing.JFrame {
     private boolean validaHoras(){
         if(chkLunes.isSelected()){
             if((int)spnLunesInicio.getValue() >= (int)spnLunesFin.getValue()){
+                JOptionPane.showMessageDialog(null,"Hay incongruencia en las horas de clase ingresadas");
                 return false;
             }
         }
         if(chkMartes.isSelected()){
             if((int)spnMartesInicio.getValue() >= (int)spnMartesFin.getValue()){
+                JOptionPane.showMessageDialog(null,"Hay incongruencia en las horas de clase ingresadas");
                 return false;
             }
         }
         if(chkMiercoles.isSelected()){
             if((int)spnMiercolesInicio.getValue() >= (int)spnMiercolesFin.getValue()){
+                JOptionPane.showMessageDialog(null,"Hay incongruencia en las horas de clase ingresadas");
                 return false;
             }
         }
         if(chkJueves.isSelected()){
             if((int)spnJuevesInicio.getValue() >= (int)spnJuevesFin.getValue()){
+                JOptionPane.showMessageDialog(null,"Hay incongruencia en las horas de clase ingresadas");
                 return false;
             }
         }
         if(chkViernes.isSelected()){
             if((int)spnViernesInicio.getValue() >= (int)spnViernesFin.getValue()){
+                JOptionPane.showMessageDialog(null,"Hay incongruencia en las horas de clase ingresadas");
+                return false;
+            }
+        }
+        if(chkSabado.isSelected()){
+            if((int)spnSabadoInicio.getValue() >= (int)spnSabadoFin.getValue()){
+                JOptionPane.showMessageDialog(null,"Hay incongruencia en las horas de clase ingresadas");
                 return false;
             }
         }
@@ -483,13 +582,18 @@ public class MateriasFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkLunes;
     private javax.swing.JCheckBox chkMartes;
     private javax.swing.JCheckBox chkMiercoles;
+    private javax.swing.JCheckBox chkSabado;
     private javax.swing.JCheckBox chkViernes;
+    private javax.swing.JCheckBox chkViernes1;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblClave;
     private javax.swing.JLabel lblDia;
+    private javax.swing.JLabel lblDia2;
     private javax.swing.JLabel lblHoraFin;
+    private javax.swing.JLabel lblHoraFin2;
     private javax.swing.JLabel lblHoraInicio;
+    private javax.swing.JLabel lblHoraInicio2;
     private javax.swing.JLabel lblHorario;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JSpinner spnJuevesFin;
@@ -500,8 +604,12 @@ public class MateriasFrame extends javax.swing.JFrame {
     private javax.swing.JSpinner spnMartesInicio;
     private javax.swing.JSpinner spnMiercolesFin;
     private javax.swing.JSpinner spnMiercolesInicio;
+    private javax.swing.JSpinner spnSabadoFin;
+    private javax.swing.JSpinner spnSabadoInicio;
     private javax.swing.JSpinner spnViernesFin;
+    private javax.swing.JSpinner spnViernesFin1;
     private javax.swing.JSpinner spnViernesInicio;
+    private javax.swing.JSpinner spnViernesInicio1;
     private javax.swing.JTextField txtClave;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables

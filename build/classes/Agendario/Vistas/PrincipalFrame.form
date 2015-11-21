@@ -158,7 +158,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane2" pref="471" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="505" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="lblHorario" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -218,13 +218,14 @@
         <Component class="javax.swing.JTable" name="tablaHorario">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="6" rowCount="0">
+              <Table columnCount="7" rowCount="0">
                 <Column editable="false" title="Hora" type="java.lang.Object"/>
                 <Column editable="false" title="Lunes" type="java.lang.Object"/>
                 <Column editable="false" title="Martes" type="java.lang.Object"/>
                 <Column editable="false" title="Mi&#xe9;rcoles" type="java.lang.Object"/>
                 <Column editable="false" title="Jueves" type="java.lang.Object"/>
                 <Column editable="false" title="Viernes" type="java.lang.Object"/>
+                <Column editable="false" title="S&#xe1;bado" type="java.lang.Object"/>
               </Table>
             </Property>
           </Properties>
